@@ -64,6 +64,25 @@ app.get("/totalDeath", async (req,res) => {
     }
 }) 
 
+app.get("/hotspotStates", async (req,res) => {
+    try{
+        const result = await connection.aggregate([
+            {$project:{_id:0, "state":"$state",
+            "rate":[{$divide:[{$subtract:["$infected","$recovered"]},"$infected"]}]
+        }}
+        ])
+        res.status(200).json({
+            //data: result
+            data: result[0]
+        })
+    } catch(err){
+        res.status(500).json({
+            status: "Failed",
+            message: err.message
+        })
+    }
+})
+
 
 
 
