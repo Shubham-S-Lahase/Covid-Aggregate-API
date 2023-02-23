@@ -28,6 +28,23 @@ app.get("/totalRecovered", async (req,res) => {
     }
 })
 
+app.get("/totalActive", async (req,res) => {
+    try{
+        const result = await connection.aggregate([
+            { $project:{"diff":{$subtract:["$infected", "$recovered"]}}},
+            { $group:{_id:"total", "active":{$sum:"$diff"}} }
+        ])
+        res.status(200).json({
+            data: result[0]
+        })
+    } catch(err) {
+        res.status(500).json({
+            status: "Failed",
+            message: err.message
+        })
+    }
+})
+
 
 
 
