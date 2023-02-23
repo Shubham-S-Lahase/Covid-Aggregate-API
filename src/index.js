@@ -18,6 +18,7 @@ app.get("/totalRecovered", async (req,res) => {
             { $group : {_id:"total", "recovered":{$sum:"$recovered"}} }
         ])
         res.status(200).json({
+            //data: result
             data: result[0]
         })
     } catch(err) {
@@ -35,6 +36,7 @@ app.get("/totalActive", async (req,res) => {
             { $group:{_id:"total", "active":{$sum:"$diff"}} }
         ])
         res.status(200).json({
+            //data: result
             data: result[0]
         })
     } catch(err) {
@@ -44,6 +46,23 @@ app.get("/totalActive", async (req,res) => {
         })
     }
 })
+
+app.get("/totalDeath", async (req,res) => {
+    try{
+        const result = await connection.aggregate([
+            { $group:{_id:"total", "death":{$sum:"$death"}} }
+        ])
+        res.status(200).json({
+            //data: result
+            data: result[0]
+        })
+    } catch(err) {
+        res.status(500).json({
+            status: "Failed",
+            message: err.message
+        })
+    }
+}) 
 
 
 
